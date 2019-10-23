@@ -1,0 +1,6 @@
+#!/bin/bash -x
+
+  printenv | sort | grep 'HTTP_\|REQUEST_\|QUERY' 1>&2
+
+  echo -e "Content-type: text/html\n\n"
+  /k3s kubectl $(httpd -d "${QUERY_STRING:=get no}")

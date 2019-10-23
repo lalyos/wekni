@@ -1,0 +1,30 @@
+#!/bin/bash
+headers() {
+  printenv | sort | grep 'HTTP_\|REQUEST_\|QUERY' | tee /dev/fd/2
+}
+
+k() {
+    /k3s kubectl $*
+}
+
+kk() {
+    set -x
+    cmd=$(httpd -d "${QUERY_STRING:= get no}")
+    k ${cmd}
+    set +x
+}
+cat << EOF
+Content-type: text/html
+
+<p><em>Hello World!</em></p>
+<pre>
+
+$(headers)
+
+$(kk)
+
+date: $(date)
+hostname: ${HOSTNAME}
+
+</pre>
+EOF
